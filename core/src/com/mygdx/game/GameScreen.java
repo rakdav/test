@@ -48,7 +48,10 @@ public class GameScreen extends ScreenAdapter {
             timer=MOVE_TIME;
             if(Math.abs(curX2-curX1)>Math.abs(curY2-curY1)&&curX2-curX1>0) snakeDirection=RIGHT;
             if(Math.abs(curX2-curX1)>Math.abs(curY2-curY1)&&curX2-curX1<0) snakeDirection=LEFT;
+            if(Math.abs(curX2-curX1)<Math.abs(curY2-curY1)&&curY2-curY1<0) snakeDirection=DOWN;
+            if(Math.abs(curX2-curX1)<Math.abs(curY2-curY1)&&curY2-curY1>0) snakeDirection=UP;
             moveSnake();
+            checkForOutOfBounds();
         }
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
@@ -83,6 +86,18 @@ public class GameScreen extends ScreenAdapter {
         if(snakeX>=Gdx.graphics.getWidth())
         {
             snakeX=0;
+        }
+        if(snakeX<0)
+        {
+            snakeX=Gdx.graphics.getWidth()-SNAKE_MOVEMENT;
+        }
+        if(snakeY<0)
+        {
+            snakeY=Gdx.graphics.getHeight()-SNAKE_MOVEMENT;
+        }
+        if(snakeY>=Gdx.graphics.getHeight())
+        {
+            snakeY=0;
         }
     }
 }
