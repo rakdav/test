@@ -15,6 +15,26 @@ public class GameScreen extends ScreenAdapter {
     private static final int SNAKE_MOVEMENT=32;
     private int snakeX=0,snakeY=0;
     private float timer=MOVE_TIME;
+    private static final int RIGHT=0;
+    private static final int LEFT=1;
+    private static final int UP=2;
+    private static final int DOWN=3;
+    private int snakeDirection=RIGHT;
+    private int curX1,curY1,curX2,curY2;
+    private void moveSnake()
+    {
+        switch (snakeDirection)
+        {
+            case RIGHT:snakeX+=SNAKE_MOVEMENT;
+                        return;
+            case LEFT:snakeX-=SNAKE_MOVEMENT;
+                return;
+            case UP:snakeY+=SNAKE_MOVEMENT;
+                return;
+            case DOWN:snakeY-=SNAKE_MOVEMENT;
+                return;
+        }
+    }
     @Override
     public void show () {
         batch = new SpriteBatch();
@@ -26,15 +46,29 @@ public class GameScreen extends ScreenAdapter {
         if(timer<=0)
         {
             timer=MOVE_TIME;
-           // snakeX+=SNAKE_MOVEMENT;
+            if(Math.abs(curX2-curX1)>Math.abs(curY2-curY1)&&curX2-curX1>0) snakeDirection=RIGHT;
+            if(Math.abs(curX2-curX1)>Math.abs(curY2-curY1)&&curX2-curX1<0) snakeDirection=LEFT;
+            moveSnake();
         }
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 System.out.println(screenX+" "+screenY);
-                snakeX = screenX;
-                snakeY= Gdx.graphics.getHeight()-screenY;
+                curX1 = screenX;
+                curY1= Gdx.graphics.getHeight()-screenY;
+//                if(snakeX<curX) snakeDirection=RIGHT;
+//                else if(snakeX>curX) snakeDirection=LEFT;
+//                if(snakeY>curY) snakeDirection=DOWN;
+//                else if(snakeY<curY) snakeDirection=UP;
+
                 return super.touchDown(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                curX2=screenX;
+                curY2= Gdx.graphics.getHeight()-screenY;
+                return super.touchUp(screenX, screenY, pointer, button);
             }
         });
         Gdx.gl.glClearColor(0, 0, 0, 1);
